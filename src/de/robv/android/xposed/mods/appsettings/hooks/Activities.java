@@ -40,7 +40,8 @@ public class Activities {
 	private static final String PROP_LEGACY_MENU = "AppSettings-LegacyMenu";
 	private static final String PROP_ORIENTATION = "AppSettings-Orientation";
 
-	private static int FLAG_NEEDS_MENU_KEY = getStaticIntField(WindowManager.LayoutParams.class, "FLAG_NEEDS_MENU_KEY");
+	private static final booolean PRE_LOLLIPOP_MR1 = Build.VERSION.SDK_INT < 22;
+	private static int FLAG_NEEDS_MENU_KEY = PRE_LOLLIPOP_MR1 ? getStaticIntField(WindowManager.LayoutParams.class, "FLAG_NEEDS_MENU_KEY") : -1;
 
 	public static void hookActivitySettings() {
 		try {
@@ -95,7 +96,7 @@ public class Activities {
 						setAdditionalInstanceField(window, PROP_KEEP_SCREEN_ON, Boolean.TRUE);
 					}
 
-					if (XposedMod.prefs.getBoolean(packageName + Common.PREF_LEGACY_MENU, false)) {
+					if (XposedMod.prefs.getBoolean(packageName + Common.PREF_LEGACY_MENU, false) && PRE_LOLLIPOP_MR1) {
 						window.setFlags(FLAG_NEEDS_MENU_KEY, FLAG_NEEDS_MENU_KEY);
 						setAdditionalInstanceField(window, PROP_LEGACY_MENU, Boolean.TRUE);
 					}
@@ -139,7 +140,7 @@ public class Activities {
 							param.args[0] = flags;
 						}
 					}
-					if ((mask & FLAG_NEEDS_MENU_KEY) != 0) {
+					if ((mask & FLAG_NEEDS_MENU_KEY) != 0 && PRE_LOLLIPOP_MR1) {
 						Boolean menu = (Boolean) getAdditionalInstanceField(param.thisObject, PROP_LEGACY_MENU);
 						if (menu != null) {
 							if (menu.booleanValue()) {
