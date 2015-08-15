@@ -40,7 +40,7 @@ public class Activities {
 	private static final String PROP_LEGACY_MENU = "AppSettings-LegacyMenu";
 	private static final String PROP_ORIENTATION = "AppSettings-Orientation";
 
-	private static final booolean PRE_LOLLIPOP_MR1 = Build.VERSION.SDK_INT < 22;
+	private static final boolean PRE_LOLLIPOP_MR1 = Build.VERSION.SDK_INT < 22;
 	private static int FLAG_NEEDS_MENU_KEY = PRE_LOLLIPOP_MR1 ? getStaticIntField(WindowManager.LayoutParams.class, "FLAG_NEEDS_MENU_KEY") : -1;
 
 	public static void hookActivitySettings() {
